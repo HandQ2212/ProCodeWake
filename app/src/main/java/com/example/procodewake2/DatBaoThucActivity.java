@@ -26,6 +26,7 @@ public class DatBaoThucActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dat_bao_thuc);
+
         timeHour = findViewById(R.id.etHour);
         timeMinute = findViewById(R.id.etMinute);
         setTime = findViewById(R.id.btnTime);
@@ -53,8 +54,8 @@ public class DatBaoThucActivity extends AppCompatActivity {
         setAlarm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent();
-
+                //Code thêm vào danh sách
+                finish();
             }
         });
     }

@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
     <item
         android:id="@+id/nav_xem_bao_thuc"
-        android:background = "#FF9800"
+        android:icon="@drawable/baseline_access_alarm_24"
         android:title="Xem báo thức"/>
 
     <item
         android:id="@+id/nav_them_cau_hoi"
-        android:background = "#FF9800"
+        android:icon="@drawable/question"
         android:title="Thêm câu hỏi"/>
 
 </menu>
