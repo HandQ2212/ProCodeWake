@@ -9,6 +9,6 @@
     <item
         android:id="@+id/nav_them_cau_hoi"
         android:icon="@drawable/question"
-        android:title="Thêm câu hỏi"/>
+        android:title="Câu hỏi"/>
 
 </menu>

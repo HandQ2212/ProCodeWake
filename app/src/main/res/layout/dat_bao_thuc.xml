@@ -46,88 +46,85 @@
 
     <TableLayout
         android:id="@+id/tblChooseElement"
-        android:layout_width="405dp"
-        android:layout_height="166dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         app:layout_constraintBottom_toTopOf="@+id/btnAlarm"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout"
-        app:layout_constraintVertical_bias="0.5">
+        app:layout_constraintVertical_bias="0.5"
+        android:padding="8dp">
 
-        <TableRow android:layout_height="37dp">
+        <TableRow android:layout_height="wrap_content">
 
             <TextView
                 android:id="@+id/txtLapLai"
-                android:layout_width="302dp"
-                android:layout_height="40dp"
-                android:color="#E62F2F"
-                android:gravity="center"
+                android:layout_width="111dp"
+                android:layout_height="wrap_content"
+                android:gravity="start"
+                android:padding="8dp"
                 android:text="Lặp lại"
                 android:textColor="#FFFFFF"
-                android:textSize="16sp" />
+                android:textSize="14sp" />
 
-            <Spinner
-                android:id="@+id/spnLapLai"
-                android:layout_height="40dp"
-                android:gravity="left"
-                tools:ignore="TouchTargetSizeCheck"
-                tools:visibility="visible" />
-
+            <TextView
+                android:id="@+id/tvLapLai"
+                android:layout_width="289dp"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:padding="8dp"
+                android:text="Không lặp"
+                android:textColor="#FFFFFF"
+                android:textSize="14sp" />
         </TableRow>
 
-        <TableRow android:layout_height="37dp">
+        <TableRow android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/txtAmThanh"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="start"
+                android:text="Âm thanh"
+                android:textColor="#FFFFFF"
+                android:textSize="14sp"
+                android:padding="8dp"/>
 
+            <TextView
+                android:id="@+id/tvAmThanh"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:text="Mặc định"
+                android:padding="8dp"
+                android:textColor="#FFFFFF"
+                android:textSize="14sp"/>
+        </TableRow>
+
+        <TableRow android:layout_height="wrap_content">
             <TextView
                 android:id="@+id/txtChuDe"
-                android:layout_width="302dp"
-                android:layout_height="40dp"
-                android:color="#000000"
-                android:gravity="center"
-                android:text="Chủ đề"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="start"
+                android:text="Chủ đề câu hỏi"
                 android:textColor="#FFFFFF"
-                android:textSize="16sp" />
-
-            <Spinner
-                android:id="@+id/spnChuDe"
-                android:layout_height="40dp"
-                android:gravity="left"
-                tools:ignore="TouchTargetSizeCheck" />
-
-        </TableRow>
-
-        <TableRow android:layout_height="37dp">
+                android:textSize="14sp"
+                android:padding="8dp"/>
 
             <TextView
-                android:layout_width="302dp"
-                android:layout_height="40dp"
-                android:color="#000000"
-                android:gravity="center"
-                android:text="lặp lại" />
-
-            <Spinner
-                android:layout_height="40dp"
-                android:gravity="left"
-                tools:ignore="TouchTargetSizeCheck" />
-
+                android:id="@+id/tvChuDe"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:text="Code"
+                android:padding="8dp"
+                android:textColor="#FFFFFF"
+                android:textSize="14sp"/>
         </TableRow>
 
-        <TableRow android:layout_height="37dp">
-
-            <TextView
-                android:layout_width="302dp"
-                android:layout_height="40dp"
-                android:color="#000000"
-                android:gravity="center"
-                android:text="lặp lại" />
-
-            <Spinner
-                android:layout_height="40dp"
-                android:gravity="left"
-                tools:ignore="TouchTargetSizeCheck" />
-
-        </TableRow>
     </TableLayout>
+
 
     <LinearLayout
         android:id="@+id/linearLayout"
