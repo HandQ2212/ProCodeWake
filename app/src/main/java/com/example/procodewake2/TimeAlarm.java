@@ -2,45 +2,43 @@ package com.example.procodewake2;
 
 import android.net.Uri;
 
-import java.time.DayOfWeek;
-import java.util.ArrayList;
-import java.util.List;
-
 public class TimeAlarm{
-    private Integer hour, minute;
-    private ArrayList<DayOfWeek> cacNgayDatBaoThuc;
+    private int hour, minute;
+    private boolean[] cacNgayDatBaoThuc;
     private boolean duocBat;
-    private Uri alarmSound;
+    private String alarmSoundPath;
+    private String topic;
 
-    public TimeAlarm(Integer hour, Integer minute, ArrayList<DayOfWeek> cacNgayDatBaoThuc, boolean duocBat, Uri alarmSound) {
+    public TimeAlarm(int hour, int minute, boolean[] cacNgayDatBaoThuc, boolean duocBat, String alarmSoundPath, String topic) {
         this.hour = hour;
         this.minute = minute;
         this.cacNgayDatBaoThuc = cacNgayDatBaoThuc;
         this.duocBat = duocBat;
-        this.alarmSound = alarmSound;
+        this.alarmSoundPath = alarmSoundPath;
+        this.topic = topic;
     }
 
-    public Integer getHour() {
+    public int getHour() {
         return hour;
     }
 
-    public void setHour(Integer hour) {
+    public void setHour(int hour) {
         this.hour = hour;
     }
 
-    public Integer getMinute() {
+    public int getMinute() {
         return minute;
     }
 
-    public void setMinute(Integer minute) {
+    public void setMinute(int minute) {
         this.minute = minute;
     }
 
-    public ArrayList<DayOfWeek> getCacNgayDatBaoThuc() {
+    public boolean[] getCacNgayDatBaoThuc() {
         return cacNgayDatBaoThuc;
     }
 
-    public void setCacNgayDatBaoThuc(ArrayList<DayOfWeek> cacNgayDatBaoThuc) {
+    public void setCacNgayDatBaoThuc(boolean[] cacNgayDatBaoThuc) {
         this.cacNgayDatBaoThuc = cacNgayDatBaoThuc;
     }
 
@@ -52,11 +50,19 @@ public class TimeAlarm{
         this.duocBat = duocBat;
     }
 
-    public Uri getAlarmSound() {
-        return alarmSound;
+    public String getAlarmSoundPath() {
+        return alarmSoundPath;
     }
 
-    public void setAlarmSound(Uri alarmSound) {
-        this.alarmSound = alarmSound;
+    public void setAlarmSoundPath(String alarmSoundPath) {
+        this.alarmSoundPath = alarmSoundPath;
+    }
+
+    public String getTopic() {
+        return topic;
+    }
+
+    public void setTopic(String topic) {
+        this.topic = topic;
     }
 }

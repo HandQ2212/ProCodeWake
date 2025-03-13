@@ -61,8 +61,11 @@
         android:orientation="vertical">
 
         <ListView
+            android:id="@+id/listview_bao_thuc"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" >
+            android:layout_height="match_parent"
+
+            >
 
 
         </ListView>

@@ -14,7 +14,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-
 public class DatBaoThucActivity extends AppCompatActivity {
     EditText timeHour, timeMinute;
     Button setTime, setAlarm;
@@ -98,6 +97,32 @@ public class DatBaoThucActivity extends AppCompatActivity {
         });
 
         //Chọn sound
+        tvAmThanh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(DatBaoThucActivity.this);
+                builder.setTitle("Chọn âm thanh");
+                //Sẽ lấy list âm thanh từ bộ nhớ đã lưu
+                String[] soundList = {"Âm thanh 1", "Âm thanh 2", "Âm thanh 3"}; // Danh sách âm thanh
+                int[] selectedSoundIndex = {-1}; // Biến lưu vị trí âm thanh được chọn
+
+                builder.setSingleChoiceItems(soundList, selectedSoundIndex[0], (dialog, which) -> {
+                    selectedSoundIndex[0] = which;
+                });
+
+                builder.setPositiveButton("OK", (dialog, which) -> {
+                    if (selectedSoundIndex[0] != -1) {
+                        tvAmThanh.setText(soundList[selectedSoundIndex[0]]);
+                    } else {
+                        tvAmThanh.setText("Chưa chọn âm thanh");
+                    }
+                });
+
+                builder.setNegativeButton("Hủy", (dialog, which) -> dialog.dismiss());
+
+                builder.show();
+            }
+        });
 
         //Chọn chủ đề câu hỏi
         boolean[] selectedChuDe = new boolean[chuDe.length];
@@ -134,12 +159,33 @@ public class DatBaoThucActivity extends AppCompatActivity {
                 builder.show();
             }
         });
+
+        //thêm nút set alarm
         setAlarm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Code thêm vào danh sách
+                int hour = Integer.parseInt(timeHour.getText().toString());
+                int minute = Integer.parseInt(timeMinute.getText().toString());
+
+                boolean[] selectedDaysArray = new boolean[days.length];
+                for (int index : selectedIndexes) {
+                    selectedDaysArray[index] = true;
+                }
+
+                String soundPath = tvAmThanh.getText().toString();
+                String topic = tvChuDe.getText().toString();
+
+                Intent resultIntent = new Intent();
+                resultIntent.putExtra("hour", hour);
+                resultIntent.putExtra("minute", minute);
+                resultIntent.putExtra("days", selectedDaysArray);
+                resultIntent.putExtra("sound", soundPath);
+                resultIntent.putExtra("topic", topic);
+
+                setResult(RESULT_OK, resultIntent);
                 finish();
             }
         });
+
     }
 }

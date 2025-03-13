@@ -1,46 +1,50 @@
 package com.example.procodewake2;
 
-import static com.example.procodewake2.R.*;
-
-import android.annotation.SuppressLint;
-import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.TimePicker;
+import android.widget.ListView;
 
-import androidx.activity.EdgeToEdge;
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
-import java.util.Calendar;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+    ListView listViewBaoThuc;
+    List<TimeAlarm> alarmList;
+    TimeAlarmAdapter adapter;
     BottomNavigationView bottomNavigationView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main); // ✅ Phải gọi trước khi tìm View
+
+        // Khởi tạo ListView
+        listViewBaoThuc = findViewById(R.id.listview_bao_thuc);
+        alarmList = new ArrayList<>();
+        adapter = new TimeAlarmAdapter(this, alarmList);
+        listViewBaoThuc.setAdapter(adapter);
 
         bottomNavigationView = findViewById(R.id.bottom_navigation);
-        bottomNavigationView.setSelectedItemId(id.nav_xem_bao_thuc); //mặc định sẽ là xem báo thức
+        bottomNavigationView.setSelectedItemId(R.id.nav_xem_bao_thuc);
         bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                int itemId = item.getItemId();
-                if (itemId == R.id.nav_xem_bao_thuc){
+                if (item.getItemId() == R.id.nav_xem_bao_thuc) {
                     return true;
-                }
-                else if (itemId == R.id.nav_them_cau_hoi){
+                } else if (item.getItemId() == R.id.nav_them_cau_hoi) {
                     Intent intent = new Intent(MainActivity.this, ThemCauHoiActivity.class);
                     startActivity(intent);
                     return true;
@@ -49,12 +53,38 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // Đăng ký ActivityResultLauncher để nhận kết quả từ DatBaoThucActivity
+        ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                new ActivityResultCallback<ActivityResult>() {
+                    @Override
+                    public void onActivityResult(ActivityResult result) {
+                        if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                            Intent data = result.getData();
+                            int hour = data.getIntExtra("hour", 0);
+                            int minute = data.getIntExtra("minute", 0);
+                            boolean[] selectedDays = data.getBooleanArrayExtra("days");
+                            String soundPath = data.getStringExtra("sound");
+                            String topic = data.getStringExtra("topic");
+
+                            if (alarmList == null) {
+                                alarmList = new ArrayList<>();
+                            }
+
+                            TimeAlarm timeAlarm = new TimeAlarm(hour, minute, selectedDays, true, soundPath, topic);
+                            alarmList.add(timeAlarm);
+                            adapter.notifyDataSetChanged();
+                        }
+                    }
+                });
+
+        //Đặt nút báo thức
         Button btnDatBaoThuc = findViewById(R.id.btnDatBaoThuc);
         btnDatBaoThuc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, DatBaoThucActivity.class);
-                startActivity(intent);
+                activityResultLauncher.launch(intent);
             }
         });
     }
