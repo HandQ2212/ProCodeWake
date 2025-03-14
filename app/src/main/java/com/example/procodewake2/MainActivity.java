@@ -29,11 +29,15 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main); // ✅ Phải gọi trước khi tìm View
+        setContentView(R.layout.activity_main);
 
         // Khởi tạo ListView
         listViewBaoThuc = findViewById(R.id.listview_bao_thuc);
-        alarmList = new ArrayList<>();
+        // Đọc danh sách báo thức từ file JSON
+        alarmList = JsonHelper.loadAlarms(this);
+        if (alarmList == null) {
+            alarmList = new ArrayList<>();
+        }
         adapter = new TimeAlarmAdapter(this, alarmList);
         listViewBaoThuc.setAdapter(adapter);
 
@@ -74,6 +78,8 @@ public class MainActivity extends AppCompatActivity {
                             TimeAlarm timeAlarm = new TimeAlarm(hour, minute, selectedDays, true, soundPath, topic);
                             alarmList.add(timeAlarm);
                             adapter.notifyDataSetChanged();
+                            //Lưu lại danh sách báo thức
+                            JsonHelper.saveAlarms(MainActivity.this, alarmList);
                         }
                     }
                 });
