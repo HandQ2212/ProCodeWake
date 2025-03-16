@@ -32,12 +32,12 @@
         android:id="@+id/bottom_navigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#696969"
         android:layout_alignParentBottom="true"
-        app:itemTextColor = "#FF9800"
+        android:layout_marginBottom="0dp"
+        android:background="#696969"
         app:itemIconTint="#FF9800"
-        app:menu="@menu/bottom_nav_menu"
-        />
+        app:itemTextColor="#FF9800"
+        app:menu="@menu/bottom_nav_menu" />
 
     <TextView
         android:id="@+id/textView"
