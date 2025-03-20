@@ -1,0 +1,14 @@
+[
+  {
+    "alarmSoundPath": "app/samsung-alarm-sound-iphone-nhacchuongviet.com.mp3",
+    "nameSound": "Mặc định"
+  },
+  {
+    "alarmSoundPath": "app/bac-bling-bac-ninh-hoa-minzy-nhacchuongviet.com.mp3",
+    "nameSound": "Bắc Bling"
+  },
+  {
+    "alarmSoundPath":"app/bao-thuc-quan-doi-nhacchuongviet.com.mp3",
+    "nameSound": "Báo Thức Quân Đội"
+  }
+]

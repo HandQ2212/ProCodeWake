@@ -3,6 +3,7 @@ package com.example.procodewake2;
 import android.app.AlertDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -12,8 +13,17 @@ import android.widget.TimePicker;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
+
 public class DatBaoThucActivity extends AppCompatActivity {
     EditText timeHour, timeMinute;
     Button setTime, setAlarm;
@@ -23,10 +33,12 @@ public class DatBaoThucActivity extends AppCompatActivity {
     int currentMinute;
     TextView tvLapLai, tvAmThanh, tvChuDe;
 
-    // Danh sách ngày trong tuần
     String[] days = {"Chủ Nhật", "Thứ Hai", "Thứ Ba", "Thứ Tư", "Thứ Năm", "Thứ Sáu", "Thứ Bảy"};
-    // Danh sách chủ đề
-    String[] chuDe ={"Code", "Toán", "Tiếng Anh", "Khác"};
+    String[] chuDe = {"Code", "Toán", "Tiếng Anh", "Khác"};
+
+    List<JSONObject> soundList = new ArrayList<>();
+    String selectedSoundPath = null; // Đường dẫn âm thanh đã chọn
+    ArrayList<Integer> selectedIndexes;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,153 +51,143 @@ public class DatBaoThucActivity extends AppCompatActivity {
         tvAmThanh = findViewById(R.id.tvAmThanh);
         tvChuDe = findViewById(R.id.tvChuDe);
 
-        //Thêm thời gian
-        setTime.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                calendar = Calendar.getInstance();
-                currentHour = calendar.get(Calendar.HOUR_OF_DAY);
-                currentMinute = calendar.get(Calendar.MINUTE);
+        loadSoundsFromAssets(); // Đọc danh sách âm thanh từ assets
 
-                timePickerDialog = new TimePickerDialog(DatBaoThucActivity.this, new TimePickerDialog.OnTimeSetListener() {
-                    @Override
-                    public void onTimeSet(TimePicker timePicker, int hourOfDay, int minutes) {
-                        timeHour.setText(String.format("%02d", hourOfDay));
-                        timeMinute.setText(String.format("%02d", minutes));
-                    }
-                }, currentHour, currentMinute, false);
+        setTime.setOnClickListener(v -> showTimePickerDialog());
+        tvLapLai.setOnClickListener(v -> showRepeatDialog());
+        tvAmThanh.setOnClickListener(v -> showSoundSelectionDialog());
+        tvChuDe.setOnClickListener(v -> showTopicSelectionDialog());
+        setAlarm.setOnClickListener(v -> saveAlarm());
+    }
 
-                timePickerDialog.show();
+    private void loadSoundsFromAssets() {
+        try {
+            AssetManager assetManager = getAssets();
+            InputStream is = assetManager.open("sound.json");
+            byte[] buffer = new byte[is.available()];
+            is.read(buffer);
+            is.close();
+
+            String jsonStr = new String(buffer, StandardCharsets.UTF_8);
+            JSONArray jsonArray = new JSONArray(jsonStr);
+
+            for (int i = 0; i < jsonArray.length(); i++) {
+                soundList.add(jsonArray.getJSONObject(i));
             }
-        });
+        } catch (IOException | JSONException e) {
+            e.printStackTrace();
+        }
+    }
 
-        //Chọn chế độ lặp lại
+    private void showTimePickerDialog() {
+        calendar = Calendar.getInstance();
+        currentHour = calendar.get(Calendar.HOUR_OF_DAY);
+        currentMinute = calendar.get(Calendar.MINUTE);
+
+        timePickerDialog = new TimePickerDialog(this, (timePicker, hourOfDay, minutes) -> {
+            timeHour.setText(String.format("%02d", hourOfDay));
+            timeMinute.setText(String.format("%02d", minutes));
+        }, currentHour, currentMinute, false);
+        timePickerDialog.show();
+    }
+
+    private void showRepeatDialog() {
         boolean[] selectedDays = new boolean[days.length];
-        ArrayList<Integer> selectedIndexes = new ArrayList<>();
-        tvLapLai.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(DatBaoThucActivity.this);
-                builder.setTitle("Chọn ngày lặp lại");
+        selectedIndexes = new ArrayList<>();
 
-                builder.setMultiChoiceItems(days, selectedDays, (dialog, which, isChecked) -> {
-                    if (isChecked) {
-                        selectedIndexes.add(which);
-                    }
-                    else {
-                        selectedIndexes.remove(Integer.valueOf(which));
-                    }
-                });
-
-                builder.setPositiveButton("OK", (dialog, which) -> {
-                    if (selectedIndexes.isEmpty()) {
-                        tvLapLai.setText("Không lặp");
-                    }
-                    else {
-                        StringBuilder selectedText = new StringBuilder();
-                        for (int index : selectedIndexes) {
-                            selectedText.append(days[index]).append(", ");
-                        }
-                        tvLapLai.setText(selectedText.substring(0, selectedText.length() - 2)); // Xóa dấu ", " cuối
-                    }
-                });
-
-                builder.setNegativeButton("Hủy", (dialog, which) -> dialog.dismiss());
-
-                builder.show();
-            }
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Chọn ngày lặp lại");
+        builder.setMultiChoiceItems(days, selectedDays, (dialog, which, isChecked) -> {
+            if (isChecked) selectedIndexes.add(which);
+            else selectedIndexes.remove(Integer.valueOf(which));
         });
 
-        //Chọn sound
-        tvAmThanh.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(DatBaoThucActivity.this);
-                builder.setTitle("Chọn âm thanh");
-                //Sẽ lấy list âm thanh từ bộ nhớ đã lưu
-                String[] soundList = {"Âm thanh 1", "Âm thanh 2", "Âm thanh 3"}; // Danh sách âm thanh
-                int[] selectedSoundIndex = {-1}; // Biến lưu vị trí âm thanh được chọn
-
-                builder.setSingleChoiceItems(soundList, selectedSoundIndex[0], (dialog, which) -> {
-                    selectedSoundIndex[0] = which;
-                });
-
-                builder.setPositiveButton("OK", (dialog, which) -> {
-                    if (selectedSoundIndex[0] != -1) {
-                        tvAmThanh.setText(soundList[selectedSoundIndex[0]]);
-                    } else {
-                        tvAmThanh.setText("Chưa chọn âm thanh");
-                    }
-                });
-
-                builder.setNegativeButton("Hủy", (dialog, which) -> dialog.dismiss());
-
-                builder.show();
-            }
-        });
-
-        //Chọn chủ đề câu hỏi
-        boolean[] selectedChuDe = new boolean[chuDe.length];
-        ArrayList<Integer> selected = new ArrayList<>();
-        tvChuDe.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(DatBaoThucActivity.this);
-                builder.setTitle("Chọn chủ đề");
-                builder.setMultiChoiceItems(chuDe, selectedChuDe, (dialog, which, isChecked) -> {
-                    if (isChecked) {
-                        selected.add(which);
-                    }
-                    else {
-                        selected.remove(Integer.valueOf(which));
-                    }
-                });
-
-                builder.setPositiveButton("OK", (dialog, which) -> {
-                    if (selected.isEmpty()) {
-                        tvChuDe.setText("Không lặp");
-                    }
-                    else {
-                        StringBuilder selectedText = new StringBuilder();
-                        for (int index : selected) {
-                            selectedText.append(chuDe[index]).append(" hoặc ");
-                        }
-                        tvChuDe.setText(selectedText.substring(0, selectedText.length() - 6)); // Xóa " hoặc " cuối
-                    }
-                });
-
-                builder.setNegativeButton("Hủy", (dialog, which) -> dialog.dismiss());
-
-                builder.show();
-            }
-        });
-
-        //thêm nút set alarm
-        setAlarm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int hour = Integer.parseInt(timeHour.getText().toString());
-                int minute = Integer.parseInt(timeMinute.getText().toString());
-
-                boolean[] selectedDaysArray = new boolean[days.length];
+        builder.setPositiveButton("OK", (dialog, which) -> {
+            if (selectedIndexes.isEmpty()) {
+                tvLapLai.setText("Không lặp");
+            } else {
+                StringBuilder selectedText = new StringBuilder();
                 for (int index : selectedIndexes) {
-                    selectedDaysArray[index] = true;
+                    selectedText.append(days[index]).append(", ");
                 }
-
-                String soundPath = tvAmThanh.getText().toString();
-                String topic = tvChuDe.getText().toString();
-
-                Intent resultIntent = new Intent();
-                resultIntent.putExtra("hour", hour);
-                resultIntent.putExtra("minute", minute);
-                resultIntent.putExtra("days", selectedDaysArray);
-                resultIntent.putExtra("sound", soundPath);
-                resultIntent.putExtra("topic", topic);
-
-                setResult(RESULT_OK, resultIntent);
-                finish();
+                tvLapLai.setText(selectedText.substring(0, selectedText.length() - 2));
             }
         });
 
+        builder.setNegativeButton("Hủy", (dialog, which) -> dialog.dismiss());
+        builder.show();
+    }
+
+    private void showSoundSelectionDialog() {
+        if (soundList.isEmpty()) return;
+
+        String[] soundNames = new String[soundList.size()];
+        for (int i = 0; i < soundList.size(); i++) {
+            try {
+                soundNames[i] = soundList.get(i).getString("nameSound");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Chọn âm thanh");
+
+        int[] selectedSoundIndex = {-1};
+        builder.setSingleChoiceItems(soundNames, selectedSoundIndex[0], (dialog, which) -> {
+            selectedSoundIndex[0] = which;
+        });
+
+        builder.setPositiveButton("OK", (dialog, which) -> {
+            if (selectedSoundIndex[0] != -1) {
+                try {
+                    selectedSoundPath = soundList.get(selectedSoundIndex[0]).getString("alarmSoundPath");
+                    tvAmThanh.setText(soundNames[selectedSoundIndex[0]]);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        builder.setNegativeButton("Hủy", (dialog, which) -> dialog.dismiss());
+        builder.show();
+    }
+
+    private void showTopicSelectionDialog() {
+        int[] selectedTopicIndex = {-1};
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Chọn chủ đề");
+        builder.setSingleChoiceItems(chuDe, selectedTopicIndex[0], (dialog, which) -> selectedTopicIndex[0] = which);
+
+        builder.setPositiveButton("OK", (dialog, which) -> {
+            if (selectedTopicIndex[0] != -1) {
+                tvChuDe.setText(chuDe[selectedTopicIndex[0]]);
+            }
+        });
+
+        builder.setNegativeButton("Hủy", (dialog, which) -> dialog.dismiss());
+        builder.show();
+    }
+
+    private void saveAlarm() {
+        int hour = Integer.parseInt(timeHour.getText().toString());
+        int minute = Integer.parseInt(timeMinute.getText().toString());
+
+        boolean[] selectedDaysArray = new boolean[days.length];
+        for (int index : selectedIndexes) {
+            selectedDaysArray[index] = true; // Đánh dấu ngày được chọn
+        }
+
+        String topic = tvChuDe.getText().toString();
+
+        Intent resultIntent = new Intent();
+        resultIntent.putExtra("hour", hour);
+        resultIntent.putExtra("minute", minute);
+        resultIntent.putExtra("days", selectedDaysArray);
+        resultIntent.putExtra("sound", selectedSoundPath);
+        resultIntent.putExtra("topic", topic);
+
+        setResult(RESULT_OK, resultIntent);
+        finish();
     }
 }

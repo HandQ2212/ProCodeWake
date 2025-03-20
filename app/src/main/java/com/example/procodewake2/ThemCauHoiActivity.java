@@ -86,7 +86,6 @@ public class ThemCauHoiActivity extends AppCompatActivity {
                 questionArray = new JSONArray();
             }
 
-            // Lưu dạng { "question": "...", "answer": "..." }
             JSONObject newQuestion = new JSONObject();
             newQuestion.put("question", question);
             newQuestion.put("answer", answer);

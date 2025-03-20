@@ -2,7 +2,9 @@ package com.example.procodewake2;
 
 import android.net.Uri;
 
-public class TimeAlarm{
+import java.io.Serializable;
+
+public class TimeAlarm implements Serializable {
     private int hour, minute;
     private boolean[] cacNgayDatBaoThuc;
     private boolean duocBat;

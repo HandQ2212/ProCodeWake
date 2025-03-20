@@ -1,9 +1,12 @@
 package com.example.procodewake2;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 
@@ -18,6 +21,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -77,20 +82,50 @@ public class MainActivity extends AppCompatActivity {
 
                             TimeAlarm timeAlarm = new TimeAlarm(hour, minute, selectedDays, true, soundPath, topic);
                             alarmList.add(timeAlarm);
+                            sortAlarmList();
                             adapter.notifyDataSetChanged();
-                            //Lưu lại danh sách báo thức
                             JsonHelper.saveAlarms(MainActivity.this, alarmList);
                         }
                     }
                 });
 
-        //Đặt nút báo thức
         Button btnDatBaoThuc = findViewById(R.id.btnDatBaoThuc);
         btnDatBaoThuc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, DatBaoThucActivity.class);
                 activityResultLauncher.launch(intent);
+            }
+        });
+
+        listViewBaoThuc.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                new AlertDialog.Builder(MainActivity.this)
+                        .setTitle("Xóa báo thức")
+                        .setMessage("Bạn có chắc chắn muốn xóa báo thức này?")
+                        .setPositiveButton("Xóa", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                alarmList.remove(position);
+                                adapter.notifyDataSetChanged();
+                                JsonHelper.saveAlarms(MainActivity.this, alarmList);
+                            }
+                        })
+                        .setNegativeButton("Hủy", null)
+                        .show();
+                return true;
+            }
+        });
+    }
+    private void sortAlarmList() {
+        Collections.sort(alarmList, new Comparator<TimeAlarm>() {
+            @Override
+            public int compare(TimeAlarm time1, TimeAlarm time2) {
+                if (time1.getHour() != time2.getHour()) {
+                    return Integer.compare(time1.getHour(), time2.getHour());
+                }
+                return Integer.compare(time1.getMinute(), time2.getMinute());
             }
         });
     }
