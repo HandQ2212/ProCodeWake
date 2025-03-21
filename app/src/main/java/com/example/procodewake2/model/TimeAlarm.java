@@ -1,6 +1,4 @@
-package com.example.procodewake2;
-
-import android.net.Uri;
+package com.example.procodewake2.model;
 
 import java.io.Serializable;
 

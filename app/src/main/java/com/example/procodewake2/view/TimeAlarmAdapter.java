@@ -1,4 +1,4 @@
-package com.example.procodewake2;
+package com.example.procodewake2.view;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -8,6 +8,9 @@ import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.BaseAdapter;
+
+import com.example.procodewake2.R;
+import com.example.procodewake2.model.TimeAlarm;
 
 import java.util.List;
 

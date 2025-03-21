@@ -1,17 +1,17 @@
-package com.example.procodewake2;
+package com.example.procodewake2.view;
 
 import android.app.AlertDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.content.res.AssetManager;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.TimePicker;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.procodewake2.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;

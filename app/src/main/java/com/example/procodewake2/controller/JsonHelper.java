@@ -1,5 +1,7 @@
-package com.example.procodewake2;
+package com.example.procodewake2.controller;
 import android.content.Context;
+
+import com.example.procodewake2.model.TimeAlarm;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import java.io.File;
