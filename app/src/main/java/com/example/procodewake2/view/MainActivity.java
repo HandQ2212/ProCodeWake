@@ -1,5 +1,6 @@
 package com.example.procodewake2.view;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -17,6 +18,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.procodewake2.controller.AlarmService;
 import com.example.procodewake2.controller.JsonHelper;
 import com.example.procodewake2.R;
 import com.example.procodewake2.model.TimeAlarm;
@@ -88,6 +90,7 @@ public class MainActivity extends AppCompatActivity {
                             sortAlarmList();
                             adapter.notifyDataSetChanged();
                             JsonHelper.saveAlarms(MainActivity.this, alarmList);
+
                         }
                     }
                 });
@@ -113,6 +116,10 @@ public class MainActivity extends AppCompatActivity {
                                 alarmList.remove(position);
                                 adapter.notifyDataSetChanged();
                                 JsonHelper.saveAlarms(MainActivity.this, alarmList);
+
+                                // Khởi động AlarmService để cập nhật báo thức
+                                Intent serviceIntent = new Intent(MainActivity.this, AlarmService.class);
+                                startService(serviceIntent);
                             }
                         })
                         .setNegativeButton("Hủy", null)
@@ -120,10 +127,10 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
-
-
-
+        Intent serviceIntent = new Intent(this, AlarmService.class);
+        startService(serviceIntent);
     }
+
     private void sortAlarmList() {
         Collections.sort(alarmList, new Comparator<TimeAlarm>() {
             @Override
@@ -135,6 +142,4 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
-
 }

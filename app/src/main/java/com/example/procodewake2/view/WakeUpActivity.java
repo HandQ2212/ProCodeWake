@@ -1,5 +1,6 @@
 package com.example.procodewake2.view;
 
+import android.annotation.SuppressLint;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.widget.Button;
@@ -9,8 +10,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.procodewake2.controller.QuestionUtils;
 import com.example.procodewake2.R;
-
-import java.io.IOException;
 
 public class WakeUpActivity extends AppCompatActivity {
     private MediaPlayer mediaPlayer;
@@ -30,31 +29,42 @@ public class WakeUpActivity extends AppCompatActivity {
 
         QuestionUtils.Question randomQuestion = QuestionUtils.getRandomQuestion(this, topic);
         if (randomQuestion == null) {
-            questionView.setText("Không tìm thấy câu hỏi.");
-            correctAnswer = "";
+            questionView.setText("Không tìm thấy câu hỏi. (Ấn nộp bài để thoát)");
+            correctAnswer = "null";
         } else {
             questionView.setText(randomQuestion.getQuestion());
             correctAnswer = randomQuestion.getAnswer();
         }
-
-        mediaPlayer = new MediaPlayer();
-        try {
-            mediaPlayer.setDataSource(soundPath);
-            mediaPlayer.prepare();
-            mediaPlayer.start();
-        } catch (IOException e) {
-            e.printStackTrace();
+        //Phát âm thanh
+        @SuppressLint("DiscouragedApi") int soundResId = getResources().getIdentifier(soundPath, "raw", getPackageName());
+        mediaPlayer = MediaPlayer.create(this, soundResId);
+        if (mediaPlayer == null) {
+            questionView.setText("Không thể tạo MediaPlayer.");
+            return;
         }
+        mediaPlayer.setLooping(true); // Phát âm thanh lặp lại
+        mediaPlayer.start();
 
         submitButton.setOnClickListener(v -> {
             String userAnswer = answerInput.getText().toString().trim();
             if (userAnswer.equalsIgnoreCase(correctAnswer)) {
                 mediaPlayer.stop();
+                mediaPlayer.release();
                 finish();
             } else {
                 answerInput.setText("");
                 mediaPlayer.start();
             }
         });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mediaPlayer != null) {
+            mediaPlayer.stop();
+            mediaPlayer.release();
+            mediaPlayer = null;
+        }
     }
 }
