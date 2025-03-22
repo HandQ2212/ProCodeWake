@@ -13,6 +13,7 @@
     import android.view.View;
     import android.widget.AdapterView;
     import android.widget.Button;
+    import android.widget.ImageView;
     import android.widget.ListView;
 
     import androidx.activity.result.ActivityResult;
@@ -23,6 +24,7 @@
     import androidx.annotation.RequiresApi;
     import androidx.appcompat.app.AppCompatActivity;
 
+    import com.bumptech.glide.Glide;
     import com.example.procodewake2.controller.AlarmService;
     import com.example.procodewake2.controller.JsonHelper;
     import com.example.procodewake2.R;
@@ -48,7 +50,6 @@
             super.onCreate(savedInstanceState);
 
             setContentView(R.layout.activity_main);
-
             // Khởi tạo ListView
             listViewBaoThuc = findViewById(R.id.listview_bao_thuc);
             // Đọc danh sách báo thức từ file JSON
@@ -68,7 +69,7 @@
                     alarmIdList = new ArrayList<>();
                 }
             } catch (Exception e) {
-                alarmList = new ArrayList<>();
+                alarmIdList = new ArrayList<>();
                 Log.e("MainActivity", "Lỗi khi đọc file JSON của ID", e);
             }
 

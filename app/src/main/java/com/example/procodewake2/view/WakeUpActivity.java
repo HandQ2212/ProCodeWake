@@ -7,9 +7,11 @@ import android.util.Log;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.bumptech.glide.Glide;
 import com.example.procodewake2.controller.AlarmUtils;
 import com.example.procodewake2.controller.QuestionUtils;
 import com.example.procodewake2.R;
@@ -24,6 +26,12 @@ public class WakeUpActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.man_hinh_bao_thuc);
+        ImageView alarmGif = findViewById(R.id.alarmGif);
+
+        Glide.with(this)
+                .asGif()
+                .load(R.drawable.alarm_gif)
+                .into(alarmGif);
 
         TextView questionView = findViewById(R.id.questionText);
         EditText answerInput = findViewById(R.id.answerInput);

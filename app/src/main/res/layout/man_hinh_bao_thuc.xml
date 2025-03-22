@@ -1,9 +1,8 @@
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:adnroid="http://schemas.android.com/tools"
     android:background="@color/black"
     android:padding="16dp">
 
@@ -41,7 +40,7 @@
         android:hint="Nhập câu trả lời..."
         android:minHeight="48dp"
         android:padding="12dp"
-        android:textColor="@android:color/white"
+        android:textColor="#B5B5B5"
         android:textColorHint="@android:color/darker_gray"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -55,6 +54,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="44dp"
         android:text="Nộp bài"
+        android:backgroundTint="#FF9800"
+        android:textColor="#FFFFFF"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/answerInput" />

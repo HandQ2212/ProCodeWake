@@ -44,17 +44,18 @@
         android:layout_height="wrap_content"
         app:barrierDirection="left" />
 
+
     <TableLayout
         android:id="@+id/tblChooseElement"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="416dp"
+        android:layout_height="137dp"
+        android:padding="8dp"
         app:layout_constraintBottom_toTopOf="@+id/btnAlarm"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_bias="0.6"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout"
-        app:layout_constraintVertical_bias="0.5"
-        android:padding="8dp">
+        app:layout_constraintVertical_bias="0.5">
 
         <TableRow android:layout_height="wrap_content">
 
@@ -62,6 +63,7 @@
                 android:id="@+id/txtLapLai"
                 android:layout_width="111dp"
                 android:layout_height="wrap_content"
+                android:background="@drawable/textview_border"
                 android:gravity="start"
                 android:padding="8dp"
                 android:text="Lặp lại"
@@ -72,6 +74,7 @@
                 android:id="@+id/tvLapLai"
                 android:layout_width="289dp"
                 android:layout_height="wrap_content"
+                android:background="@drawable/textview_border"
                 android:gravity="right"
                 android:padding="8dp"
                 android:text="Không lặp"
@@ -79,52 +82,67 @@
                 android:textSize="14sp" />
         </TableRow>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#FFFFFF" />
+
         <TableRow android:layout_height="wrap_content">
+
             <TextView
                 android:id="@+id/txtAmThanh"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:background="@drawable/textview_border"
                 android:gravity="start"
+                android:padding="8dp"
                 android:text="Âm thanh"
                 android:textColor="#FFFFFF"
-                android:textSize="14sp"
-                android:padding="8dp"/>
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/tvAmThanh"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:background="@drawable/textview_border"
                 android:gravity="right"
-                android:text="Mặc định"
                 android:padding="8dp"
+                android:text="Mặc định"
                 android:textColor="#FFFFFF"
-                android:textSize="14sp"/>
+                android:textSize="14sp" />
         </TableRow>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#FFFFFF" />
+
         <TableRow android:layout_height="wrap_content">
+
             <TextView
                 android:id="@+id/txtChuDe"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:background="@drawable/textview_border"
                 android:gravity="start"
+                android:padding="8dp"
                 android:text="Chủ đề câu hỏi"
                 android:textColor="#FFFFFF"
-                android:textSize="14sp"
-                android:padding="8dp"/>
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/tvChuDe"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="256dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/textview_border"
                 android:gravity="right"
-                android:text="Code"
                 android:padding="8dp"
+                android:text="Code"
                 android:textColor="#FFFFFF"
-                android:textSize="14sp"/>
+                android:textSize="14sp" />
         </TableRow>
 
     </TableLayout>
-
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -147,7 +165,7 @@
             android:inputType="text"
             android:text="Hour"
             android:textAlignment="center"
-            android:textColor="#2E2D2B" />
+            android:textColor="#B5B5B5" />
 
         <TextView
             android:id="@+id/txtHaiCham"
@@ -168,7 +186,7 @@
             android:inputType="text"
             android:text="Minutes"
             android:textAlignment="center"
-            android:textColor="#2E2D2B" />
+            android:textColor="#B5B5B5" />
     </LinearLayout>
 
     <Button
