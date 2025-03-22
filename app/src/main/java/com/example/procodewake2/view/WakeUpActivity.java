@@ -3,6 +3,7 @@ package com.example.procodewake2.view;
 import android.annotation.SuppressLint;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -28,20 +29,10 @@ public class WakeUpActivity extends AppCompatActivity {
         String soundPath = getIntent().getStringExtra("soundPath");
 
         QuestionUtils.Question randomQuestion = QuestionUtils.getRandomQuestion(this, topic);
-        if (randomQuestion == null) {
-            questionView.setText("Không tìm thấy câu hỏi. (Ấn nộp bài để thoát)");
-            correctAnswer = "null";
-        } else {
-            questionView.setText(randomQuestion.getQuestion());
-            correctAnswer = randomQuestion.getAnswer();
-        }
+
         //Phát âm thanh
         @SuppressLint("DiscouragedApi") int soundResId = getResources().getIdentifier(soundPath, "raw", getPackageName());
         mediaPlayer = MediaPlayer.create(this, soundResId);
-        if (mediaPlayer == null) {
-            questionView.setText("Không thể tạo MediaPlayer.");
-            return;
-        }
         mediaPlayer.setLooping(true); // Phát âm thanh lặp lại
         mediaPlayer.start();
 
@@ -56,6 +47,13 @@ public class WakeUpActivity extends AppCompatActivity {
                 mediaPlayer.start();
             }
         });
+
+        getWindow().addFlags(
+                WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON |
+                        WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON |
+                        WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
+                        WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD
+        );
     }
 
     @Override

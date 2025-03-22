@@ -37,7 +37,7 @@ public class DatBaoThucActivity extends AppCompatActivity {
     String[] chuDe = {"Code", "Toán", "Tiếng Anh", "Khác"};
 
     List<JSONObject> soundList = new ArrayList<>();
-    String selectedSoundPath = "mac_dinh.mp3"; // Đường dẫn âm thanh đã chọn
+    String selectedSoundPath = "mac_dinh"; // Đường dẫn âm thanh đã chọn
     ArrayList<Integer> selectedIndexes;
     @Override
     protected void onCreate(Bundle savedInstanceState) {

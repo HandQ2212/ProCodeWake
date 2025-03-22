@@ -1,15 +1,11 @@
 package com.example.procodewake2.controller;
 
 import android.annotation.SuppressLint;
-import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
@@ -19,6 +15,7 @@ import androidx.core.app.NotificationCompat;
 
 import com.example.procodewake2.R;
 import com.example.procodewake2.model.TimeAlarm;
+import com.example.procodewake2.controller.AlarmUtils;
 import com.example.procodewake2.view.WakeUpActivity;
 
 import java.util.Calendar;
@@ -30,7 +27,6 @@ public class AlarmService extends Service {
     private Handler handler;
     private Runnable runnable;
 
-    @SuppressLint("ForegroundServiceType")
     @Override
     public void onCreate() {
         super.onCreate();
@@ -64,36 +60,22 @@ public class AlarmService extends Service {
     }
 
     private void checkAlarms() {
-        List<TimeAlarm> alarms = AlarmUtils.getAllAlarms(this);
-        if (alarms == null) return;
+        List<String> alarmIds = AlarmUtils.getAllAlarmIds(this);
+        if (alarmIds == null) return;
 
         Calendar now = Calendar.getInstance();
         int currentHour = now.get(Calendar.HOUR_OF_DAY);
         int currentMinute = now.get(Calendar.MINUTE);
 
-        for (TimeAlarm alarm : alarms) {
-            if (!alarm.isDuocBat()) continue; // Bỏ qua báo thức chưa bật
+        for (String alarmId : alarmIds) {
+            TimeAlarm alarm = AlarmUtils.getAlarmById(this, alarmId);
+            if (alarm == null || !alarm.isDuocBat()) continue; // Bỏ qua báo thức chưa bật
 
             if (alarm.getHour() == currentHour && alarm.getMinute() == currentMinute) {
                 Intent wakeUpIntent = new Intent(this, WakeUpActivity.class);
-                wakeUpIntent.putExtra("topic", alarm.getTopic());
-                wakeUpIntent.putExtra("soundPath", alarm.getAlarmSoundPath());
+                wakeUpIntent.putExtra("alarmId", alarmId);
                 wakeUpIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(wakeUpIntent);
-            }
-        }
-    }
-
-    private void createNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel serviceChannel = new NotificationChannel(
-                    CHANNEL_ID,
-                    "Alarm Service Channel",
-                    NotificationManager.IMPORTANCE_DEFAULT
-            );
-            NotificationManager manager = getSystemService(NotificationManager.class);
-            if (manager != null) {
-                manager.createNotificationChannel(serviceChannel);
             }
         }
     }
@@ -102,5 +84,19 @@ public class AlarmService extends Service {
     public void onDestroy() {
         super.onDestroy();
         handler.removeCallbacks(runnable);
+    }
+
+    private void createNotificationChannel() {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(
+                    CHANNEL_ID,
+                    "Alarm Service Channel",
+                    NotificationManager.IMPORTANCE_DEFAULT
+            );
+            NotificationManager manager = getSystemService(NotificationManager.class);
+            if (manager != null) {
+                manager.createNotificationChannel(channel);
+            }
+        }
     }
 }

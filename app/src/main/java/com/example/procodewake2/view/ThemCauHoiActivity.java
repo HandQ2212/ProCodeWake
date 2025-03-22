@@ -95,7 +95,7 @@ public class ThemCauHoiActivity extends AppCompatActivity {
 
             writeJsonFile(jsonObject);
 
-            Toast.makeText(this, "Đã thêm câu hỏi vào " + selectedTopic, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Đã thêm câu hỏi vào chủ đề" + selectedTopic, Toast.LENGTH_SHORT).show();
             edtQuestion.setText("");
             edtAnswer.setText("");
 
