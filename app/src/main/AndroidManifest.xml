@@ -40,7 +40,15 @@
             android:foregroundServiceType="mediaPlayback"
             android:stopWithTask="true"
              />
-        <receiver android:name=".controller.AlarmReceiver" />
+
+        <receiver
+            android:name=".controller.AlarmReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
 
         <activity
             android:name=".view.WakeUpActivity"

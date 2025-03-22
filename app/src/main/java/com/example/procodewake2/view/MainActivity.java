@@ -38,6 +38,7 @@
     public class MainActivity extends AppCompatActivity {
         ListView listViewBaoThuc;
         List<TimeAlarm> alarmList;
+        List<String> alarmIdList;
         TimeAlarmAdapter adapter;
         BottomNavigationView bottomNavigationView;
 
@@ -59,6 +60,16 @@
             } catch (Exception e) {
                 alarmList = new ArrayList<>();
                 Log.e("MainActivity", "Lỗi khi đọc file JSON", e);
+            }
+
+            try {
+                alarmIdList = JsonHelper.loadAlarmsId(this);
+                if (alarmIdList == null) {
+                    alarmIdList = new ArrayList<>();
+                }
+            } catch (Exception e) {
+                alarmList = new ArrayList<>();
+                Log.e("MainActivity", "Lỗi khi đọc file JSON của ID", e);
             }
 
             adapter = new TimeAlarmAdapter(this, alarmList);
@@ -100,9 +111,11 @@
 
                                 TimeAlarm timeAlarm = new TimeAlarm(hour, minute, selectedDays, true, soundPath, topic);
                                 alarmList.add(timeAlarm);
+                                alarmIdList.add(timeAlarm.getId());
                                 sortAlarmList();
                                 adapter.notifyDataSetChanged();
                                 JsonHelper.saveAlarms(MainActivity.this, alarmList);
+                                JsonHelper.saveAlarmIds(MainActivity.this, alarmIdList);
                             }
                         }
                     });
@@ -126,8 +139,10 @@
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     alarmList.remove(position);
+                                    alarmIdList.remove(position);
                                     adapter.notifyDataSetChanged();
                                     JsonHelper.saveAlarms(MainActivity.this, alarmList);
+                                    JsonHelper.saveAlarmIds(MainActivity.this, alarmIdList);
                                 }
                             })
                             .setNegativeButton("Hủy", null)
@@ -138,6 +153,8 @@
 
             Intent serviceIntent = new Intent(this, AlarmService.class);
             startForegroundService(serviceIntent);
+
+
         }
 
         private void sortAlarmList() {
