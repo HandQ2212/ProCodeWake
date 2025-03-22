@@ -9,13 +9,19 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
+import com.example.procodewake2.controller.AlarmReceiver;
 import com.example.procodewake2.controller.AlarmUtils;
+import com.example.procodewake2.controller.JsonHelper;
 import com.example.procodewake2.controller.QuestionUtils;
 import com.example.procodewake2.R;
 import com.example.procodewake2.model.TimeAlarm;
+
+import java.util.List;
 
 public class WakeUpActivity extends AppCompatActivity {
     private MediaPlayer mediaPlayer;
@@ -27,7 +33,7 @@ public class WakeUpActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.man_hinh_bao_thuc);
         ImageView alarmGif = findViewById(R.id.alarmGif);
-
+        AlarmReceiver.stopAlarmSound();
         Glide.with(this)
                 .asGif()
                 .load(R.drawable.alarm_gif)
@@ -89,10 +95,12 @@ public class WakeUpActivity extends AppCompatActivity {
             String userAnswer = answerInput.getText().toString().trim();
             if (userAnswer.equalsIgnoreCase(correctAnswer)) {
                 Log.d(TAG, "Câu trả lời đúng! Tắt báo thức.");
+                Toast.makeText(this, "Trả lời đúng, chúc bạn 1 ngày tốt lành", Toast.LENGTH_SHORT).show();
                 stopAlarm();
                 finish();
             } else {
                 Log.d(TAG, "Câu trả lời sai! Tiếp tục phát nhạc.");
+                Toast.makeText(this, "Trả lời sai, vui lòng thử lại", Toast.LENGTH_SHORT).show();
                 answerInput.setText("");
                 if (mediaPlayer != null && !mediaPlayer.isPlaying()) {
                     mediaPlayer.start();

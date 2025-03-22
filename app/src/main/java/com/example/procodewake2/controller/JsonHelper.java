@@ -21,83 +21,47 @@ public class JsonHelper {
     private static final String TAG = "JsonHelper";
     private static final Gson gson = new Gson();
 
-    // Lưu danh sách báo thức
+    // Lưu danh sách báo thức */
     public static void saveAlarms(Context context, List<TimeAlarm> alarmList) {
-        File file = new File(context.getFilesDir(), ALARM_FILE_NAME);
-        try (FileWriter writer = new FileWriter(file)) {
-            gson.toJson(alarmList, writer);
-            writer.flush();
-            Log.d(TAG, "Đã lưu danh sách báo thức!");
-        } catch (IOException e) {
-            Log.e(TAG, "Lỗi khi lưu báo thức!", e);
-        }
+        saveToFile(context, ALARM_FILE_NAME, alarmList);
     }
 
-    // Đọc danh sách báo thức
+    // Đọc danh sách báo thức */
     public static List<TimeAlarm> loadAlarms(Context context) {
-        File file = new File(context.getFilesDir(), ALARM_FILE_NAME);
-        if (!file.exists()) return new ArrayList<>();
-        try (FileReader reader = new FileReader(file)) {
-            Type listType = new TypeToken<List<TimeAlarm>>() {}.getType();
-            return gson.fromJson(reader, listType);
-        } catch (IOException e) {
-            Log.e(TAG, "Lỗi khi đọc báo thức!", e);
-            return new ArrayList<>();
-        }
+        return loadFromFile(context, ALARM_FILE_NAME, new TypeToken<List<TimeAlarm>>() {}.getType());
     }
 
-    public static List<String> loadAlarmsId(Context context) {
-        File file = new File(context.getFilesDir(), ALARM_IDS_FILE_NAME);
-        if (!file.exists()) return new ArrayList<>();
-        try (FileReader reader = new FileReader(file)) {
-            Type listType = new TypeToken<List<TimeAlarm>>() {}.getType();
-            return gson.fromJson(reader, listType);
-        } catch (IOException e) {
-            Log.e(TAG, "Lỗi khi đọc id báo thức!", e);
-            return new ArrayList<>();
-        }
-    }
-
-    // Lưu danh sách ID báo thức
+    // Lưu danh sách ID báo thức */
     public static void saveAlarmIds(Context context, List<String> alarmIds) {
-        File file = new File(context.getFilesDir(), ALARM_IDS_FILE_NAME);
-        try (FileWriter writer = new FileWriter(file)) {
-            gson.toJson(alarmIds, writer);
-            writer.flush();
-            Log.d(TAG, "Đã lưu danh sách ID báo thức: " + alarmIds);
-        } catch (IOException e) {
-            Log.e(TAG, "Lỗi khi lưu ID báo thức!", e);
-        }
+        saveToFile(context, ALARM_IDS_FILE_NAME, alarmIds);
     }
 
-    // Đọc danh sách ID báo thức
+    // Đọc danh sách ID báo thức */
     public static List<String> getAllAlarmIds(Context context) {
-        File file = new File(context.getFilesDir(), ALARM_IDS_FILE_NAME);
-        if (!file.exists()) return new ArrayList<>();
+        return loadFromFile(context, ALARM_IDS_FILE_NAME, new TypeToken<List<String>>() {}.getType());
+    }
 
-        try (FileReader reader = new FileReader(file)) {
-            Type listType = new TypeToken<List<String>>() {}.getType();
-            return gson.fromJson(reader, listType);
+    // Hàm chung để lưu danh sách vào file */
+    private static <T> void saveToFile(Context context, String fileName, T data) {
+        File file = new File(context.getFilesDir(), fileName);
+        try (FileWriter writer = new FileWriter(file)) {
+            gson.toJson(data, writer);
+            writer.flush();
+            Log.d(TAG, "Đã lưu dữ liệu vào " + fileName);
         } catch (IOException e) {
-            Log.e(TAG, "Lỗi khi đọc ID báo thức!", e);
+            Log.e(TAG, "Lỗi khi lưu file " + fileName, e);
+        }
+    }
+
+    // Hàm chung để đọc danh sách từ file
+    private static <T> List<T> loadFromFile(Context context, String fileName, Type type) {
+        File file = new File(context.getFilesDir(), fileName);
+        if (!file.exists()) return new ArrayList<>();
+        try (FileReader reader = new FileReader(file)) {
+            return gson.fromJson(reader, type);
+        } catch (IOException e) {
+            Log.e(TAG, "Lỗi khi đọc file " + fileName, e);
             return new ArrayList<>();
-        }
-    }
-
-    // Thêm ID báo thức
-    public static void addAlarmId(Context context, String alarmId) {
-        List<String> alarmIds = getAllAlarmIds(context);
-        if (!alarmIds.contains(alarmId)) {
-            alarmIds.add(alarmId);
-            saveAlarmIds(context, alarmIds);
-        }
-    }
-
-    /** Xóa ID báo thức */
-    public static void removeAlarmId(Context context, String alarmId) {
-        List<String> alarmIds = getAllAlarmIds(context);
-        if (alarmIds.remove(alarmId)) {
-            saveAlarmIds(context, alarmIds);
         }
     }
 }

@@ -73,4 +73,8 @@ public class TimeAlarm implements Serializable {
     public void setTopic(String topic) {
         this.topic = topic;
     }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 }
